@@ -1,4 +1,5 @@
-- For Synergie-Sindragosa realm. Only Naxxramas for now.
+For Synergie-Sindragosa realm. Only Naxxramas for now.
+
 <div align="center">
 
 # DBM-Warmane (3.3.5a)
