@@ -12,7 +12,8 @@ mod:EnableModel()
 mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_AURA"
+	"UNIT_AURA",
+	"SPELL_CAST_SUCCESS"
 )
 
 local warnShiftCasting		= mod:NewCastAnnounce(28089, 3)
@@ -25,6 +26,8 @@ local enrageTimer			= mod:NewBerserkTimer(365)
 local timerNextShift		= mod:NewNextTimer(25, 28089)
 local timerShiftCast		= mod:NewCastTimer(3, 28089)
 local timerThrow			= mod:NewNextTimer(25.6, 28338)
+
+local timerStomp		= mod:NewCDTimer(10, 55196) -- Custom stomp for Sindragosa realm
 
 local soundShiftWarn		= mod:NewSound(28089)
 local soundShift3			= mod:NewSound3(28089)
@@ -61,6 +64,13 @@ function mod:SPELL_CAST_START(args)
 		soundShiftWarn:Play("Interface\\AddOns\\DBM-Core\\sounds\\beware.ogg")
 		warnShiftCasting:Show()
 		lastShift = GetTime()
+	end
+end
+
+-- Custom Stomp ability
+function mod:SPELL_CAST_SUCCESS(args)
+	if args:IsSpellID(55196) then
+		timerStomp:Start()
 	end
 end
 
