@@ -28,8 +28,8 @@ local warnFrostrain		= mod:NewSpecialWarningMove(55699)
 
 mod:AddBoolOption("WarningIceblock", true, "yell")
 
-local timerDrainLife	= mod:NewCDTimer(20, 28542)
-local timerAirPhase		= mod:NewTimer(60, "TimerAir", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
+local timerDrainLife	= mod:NewCDTimer(23.5, 28542)
+local timerAirPhase		= mod:NewTimer(53.5, "TimerAir", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
 local timerLanding		= mod:NewTimer(28.5, "TimerLanding", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 local timerIceBlast		= mod:NewTimer(8, "TimerIceBlast", 15876)
 
@@ -43,9 +43,9 @@ function mod:OnCombatStart(delay)
 	noTargetTime = 0
 	isFlying = false
 	warned_lowhp = false
-	warnAirPhaseSoon:Schedule(38.5 - delay)
-	timerAirPhase:Start(48.5 - delay)
-	self:Schedule(46 - delay, DBM.RangeCheck.Show, DBM.RangeCheck, 12)
+	warnAirPhaseSoon:Schedule(35.5 - delay)
+	timerAirPhase:Start(45.5 - delay)
+	self:Schedule(43 - delay, DBM.RangeCheck.Show, DBM.RangeCheck, 12)
 end
 
 function mod:OnCombatEnd()
@@ -96,13 +96,13 @@ function mod:OnSync(event)
 end
 
 function mod:Landing()
-	warnAirPhaseSoon:Schedule(50)
+	warnAirPhaseSoon:Schedule(44)
 	warnLanded:Show()
 	timerAirPhase:Start()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
-	self:Schedule(60, DBM.RangeCheck.Show, DBM.RangeCheck, 12)
+	self:Schedule(51, DBM.RangeCheck.Show, DBM.RangeCheck, 12)
 end
 
 local function resetIsFlying()
@@ -128,7 +128,7 @@ mod:RegisterOnUpdateHandler(function(self, elapsed)
 		if noTargetTime > 0.5 and not isFlying then
 			noTargetTime = 0
 			isFlying = true
-			self:Schedule(60, resetIsFlying)
+			self:Schedule(53.5, resetIsFlying)
 			timerDrainLife:Cancel()
 			timerAirPhase:Cancel()
 			warnAirPhaseNow:Show()
