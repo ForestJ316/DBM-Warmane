@@ -37,7 +37,7 @@ local specwarnP2Soon		= mod:NewSpecialWarning("specwarnP2Soon")
 
 local blastTimer			= mod:NewBuffActiveTimer(4, 27808)
 local timerPhase2			= mod:NewTimer(227, "TimerPhase2")
-local mindControlCD 		= mod:NewNextTimer(60, 28410)
+local mindControlCD 		= mod:NewNextTimer(90, 28410)
 local frostBlastCD   		= mod:NewCDTimer(25, 27808)
 local fissureCD  			= mod:NewCDTimer(14, 27810)
 
@@ -73,12 +73,12 @@ function mod:OnCombatStart(delay)
 	self:ScheduleMethod(226, "StartPhase2")
 	self:SetStage(1)
 	if mod:IsDifficulty("heroic25") or mod:IsDifficulty("normal25") then
-		mindControlCD:Start(287)
-		timerPossibleMC:Schedule(287)
-		warnMindControl:Schedule(282)
+		mindControlCD:Start(317) -- old 287
+		timerPossibleMC:Schedule(317)
+		warnMindControl:Schedule(312)
 		if self.Options.EqUneqWeaponsKT and self:IsDps() then
-			self:ScheduleMethod(286.0, "UnWKT")
-			self:ScheduleMethod(286.5, "UnWKT")
+			self:ScheduleMethod(316.0, "UnWKT")
+			self:ScheduleMethod(316.5, "UnWKT")
 		end
 	end
 	self:Schedule(227, DBM.RangeCheck.Show, DBM.RangeCheck, 12)
@@ -154,7 +154,7 @@ function mod:SPELL_AURA_APPLIED(args)
 	elseif args:IsSpellID(28410) then -- Chains of Kel'Thuzad
 		table.insert(chainsTargets, args.destName)
 		mindControlCD:Start()
-		warnMindControl:Schedule(60)
+		warnMindControl:Schedule(90)
 		self:UnscheduleMethod("AnnounceChainsTargets")
 		if #chainsTargets >= 3 then
 			self:AnnounceChainsTargets()
@@ -162,8 +162,8 @@ function mod:SPELL_AURA_APPLIED(args)
 			self:ScheduleMethod(1.0, "AnnounceChainsTargets")
 		end
 		if self.Options.EqUneqWeaponsKT and self:IsDps() then
-			self:ScheduleMethod(58.0, "UnWKT")
-			self:ScheduleMethod(58.5, "UnWKT")
+			self:ScheduleMethod(88.0, "UnWKT")
+			self:ScheduleMethod(88.5, "UnWKT")
 		end
 	end
 end
@@ -213,7 +213,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif args.spellId == 28410 then
 		mindControlCD:Start()
 		timerPossibleMC:Cancel()
-		timerPossibleMC:Schedule(60)
+		timerPossibleMC:Schedule(90)
 		DBM:Debug("MC on "..args.destName,2)
 		if mod.Options.EqUneqWeaponsKT2 and args.destName == UnitName("player") then
 			mod:UnWKT()
@@ -268,10 +268,10 @@ function mod:CHAT_MSG_MONSTER_YELL(msg)
 		if mod.Options.EqUneqWeaponsKT and self:IsDps() then
 			mod:UnWKT()
 			mod:UnWKT()
-			self:ScheduleMethod(59, "UnWKT")
+			self:ScheduleMethod(89, "UnWKT")
 		end
 		timerPossibleMC:Cancel()
 		mindControlCD:Start()
-		timerPossibleMC:Schedule(60)
+		timerPossibleMC:Schedule(90)
 	end
 end
