@@ -1,4 +1,4 @@
-- For Synergie-Sindragosa realm. Only Naxxramas for now.
+- Edited from DBM-Warmane by Zidras for Synergie-Sindragosa realm. Only Naxxramas at the moment. If you have DBM from Sunwell or Whitemane then chances are the timers for upcoming content might be more precise than the unchanged ones from Warmane.
 
 <div align="center">
 
