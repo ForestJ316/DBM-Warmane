@@ -1,3 +1,4 @@
+Only Naxx for now.
 <div align="center">
 
 # DBM-Warmane (3.3.5a)
