@@ -33,6 +33,8 @@ local timerAirPhase		= mod:NewTimer(53.5, "TimerAir", "Interface\\AddOns\\DBM-Co
 local timerLanding		= mod:NewTimer(28.5, "TimerLanding", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 local timerIceBlast		= mod:NewTimer(8, "TimerIceBlast", 15876)
 
+local timerStomp		= mod:NewCDTimer(10, 55196) -- Custom stomp for Sindragosa realm
+
 local noTargetTime = 0
 local isFlying = false
 local warned_lowhp = false
@@ -67,6 +69,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnDrainLifeNow:Show()
 		warnDrainLifeSoon:Schedule(18.5)
 		timerDrainLife:Start()
+	elseif args:IsSpellID(55196) then -- Custom Stomp ability
+		timerStomp:Start()
 	end
 end
 
