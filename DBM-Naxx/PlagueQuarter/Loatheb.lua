@@ -21,39 +21,35 @@ local warnHealSoon	= mod:NewAnnounce("WarningHealSoon", 4, 48071)
 local warnHealNow	= mod:NewAnnounce("WarningHealNow", 1, 48071, false)
 
 
-local timerSpore	= mod:NewNextTimer(36, 32329)
+local timerSpore	= mod:NewNextTimer(24, 32329)
 local timerDoom		= mod:NewNextTimer(180, 29204)
 local timerAura		= mod:NewBuffActiveTimer(17, 55593)
 
 mod:AddBoolOption("SporeDamageAlert", false)
 
 local doomCounter	= 0
-local sporeTimer	= 36
+local sporeTimer	= 24
 
 function mod:OnCombatStart(delay)
 	doomCounter = 0
 	if mod:IsDifficulty("heroic25") then
 		sporeTimer = 18
 	else
-		sporeTimer = 36
+		sporeTimer = 24
 	end
 	timerSpore:Start(sporeTimer - delay)
 	warnSporeSoon:Schedule(sporeTimer - 5 - delay)
-	timerDoom:Start(120 - delay, doomCounter + 1)
+	timerDoom:Start(30 - delay, doomCounter + 1)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(29234) then
-		timerSpore:Start(sporeTimer)
+		timerSpore:Start(12) -- Each spore after first every 12 seconds
 		warnSporeNow:Show()
 		warnSporeSoon:Schedule(sporeTimer - 5)
 	elseif args:IsSpellID(29204, 55052) then  -- Inevitable Doom
 		doomCounter = doomCounter + 1
 		local timer = 30
-		if doomCounter >= 7 then
-			if doomCounter % 2 == 0 then timer = 17
-			else timer = 12 end
-		end
 		warnDoomNow:Show(doomCounter)
 		timerDoom:Start(timer, doomCounter + 1)
 	elseif args:IsSpellID(55593) then
