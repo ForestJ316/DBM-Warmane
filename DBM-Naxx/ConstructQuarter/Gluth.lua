@@ -20,15 +20,15 @@ local timerDecimate		= mod:NewCDTimer(104, 54426, nil, nil, nil, 2)
 
 function mod:OnCombatStart(delay)
 	enrageTimer:Start(420 - delay)
-	timerDecimate:Start(110 - delay)
-	warnDecimateSoon:Schedule(100 - delay)
+	timerDecimate:Start(105 - delay)
+	warnDecimateSoon:Schedule(95 - delay)
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, _, _, spellId)
 	if spellId == 28375 and self:AntiSpam(20) then
 		warnDecimateNow:Show()
-		timerDecimate:Start()
-		warnDecimateSoon:Schedule(96)
+		timerDecimate:Start(60)
+		warnDecimateSoon:Schedule(50)
 	end
 end
 
