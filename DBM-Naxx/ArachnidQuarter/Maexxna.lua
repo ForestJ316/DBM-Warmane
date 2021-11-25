@@ -53,8 +53,8 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(29484, 54125) then -- Web Spray
 		warnWebSprayNow:Show()
-		warnWebSpraySoon:Schedule(35.5)
-		timerWebSpray:Start()
+		warnWebSpraySoon:Schedule(25)
+		timerWebSpray:Start(30)
 		warnSpidersSoon:Schedule(25)
 		warnSpidersNow:Schedule(30)
 		timerSpider:Start()
