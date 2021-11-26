@@ -145,7 +145,7 @@ function mod:SPELL_AURA_APPLIED(args)
 		if self:GetDetonateRange(args.destName) <= 12 then
 			if UnitName("player") == args.destName then
 				warnManaOnYou:Show()
-				SendChatMessage("Взрыв маны на мне!","SAY")
+				SendChatMessage("Detonate Mana on me!","SAY")
 			else
 				PlaySoundFile("Sound\\Creature\\HoodWolf\\HoodWolfTransformPlayer01.wav")
 				warnManaClose:Show()
