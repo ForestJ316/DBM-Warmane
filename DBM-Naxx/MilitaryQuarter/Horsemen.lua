@@ -17,7 +17,7 @@ mod:RegisterEvents(
 
 local warnMarkSoon			= mod:NewAnnounce("WarningMarkSoon", 1, 28835, false)
 local warnMarkNow			= mod:NewAnnounce("WarningMarkNow", 2, 28835)
-local holyWrathCD     		= mod:NewCDTimer(13, 57466)
+local holyWrathCD     		= mod:NewCDTimer(13, 57466, nil, nil, nil, 3)
 
 local LADY_MARK = 28833
 local ZELIEK_MARK = 28835
@@ -29,7 +29,7 @@ local NextZeliekMark		= mod:NewNextTimer(12, ZELIEK_MARK)
 local NextBaronMark			= mod:NewNextTimer(10, BARON_MARK)
 local NextThaneMark			= mod:NewNextTimer(10, THANE_MARK)
 
-local meteorCD				= mod:NewCDTimer(14, 57467)
+local meteorCD				= mod:NewCDTimer(14, 57467, nil, nil, nil, 2)
 
 local specWarnMarkOnPlayer	= mod:NewSpecialWarning("SpecialWarningMarkOnPlayer", nil, false, true)
 
