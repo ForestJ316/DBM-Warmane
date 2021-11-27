@@ -27,7 +27,7 @@ local timerNextShift		= mod:NewNextTimer(25, 28089)
 local timerShiftCast		= mod:NewCastTimer(3, 28089)
 local timerThrow			= mod:NewNextTimer(25.6, 28338)
 
-local timerStomp		= mod:NewCDTimer(10, 55196) -- Custom stomp for Sindragosa realm
+local timerStomp			= mod:NewCDTimer(10, 55196, nil, nil, nil, 3) -- Custom stomp for Sindragosa realm
 
 local soundShiftWarn		= mod:NewSound(28089)
 local soundShift3			= mod:NewSound3(28089)
