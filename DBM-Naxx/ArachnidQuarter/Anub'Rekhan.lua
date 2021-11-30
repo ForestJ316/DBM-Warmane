@@ -20,15 +20,15 @@ local warningLocustFaded	= mod:NewAnnounce("WarningLocustFaded", 1, 28785)
 
 local specialWarningLocust	= mod:NewSpecialWarning("SpecialLocust")
 
-local timerLocustIn			= mod:NewCDTimer(55, 28785)
-local timerLocustFade 		= mod:NewBuffActiveTimer(23, 28785)
+local timerLocustIn			= mod:NewCDTimer(50, 28785)
+local timerLocustFade 		= mod:NewBuffActiveTimer(43, 28785) -- 40s instead of regular 20s for Locust Swarm
 
 mod:AddBoolOption("ArachnophobiaTimer", true, "timer")
 
 
 function mod:OnCombatStart(delay)
-	timerLocustIn:Start(70 - delay)
-	warningLocustSoon:Schedule(65 - delay)
+	timerLocustIn:Start(115 - delay) -- old 70, 45s later on Sindragosa
+	warningLocustSoon:Schedule(110 - delay)
 end
 
 function mod:SPELL_CAST_START(args)
@@ -36,7 +36,7 @@ function mod:SPELL_CAST_START(args)
 		warningLocustNow:Show()
 		specialWarningLocust:Show()
 		timerLocustIn:Stop()
-		timerLocustFade:Start(23)
+		timerLocustFade:Start(43)
 	end
 end
 
@@ -45,8 +45,8 @@ function mod:SPELL_AURA_REMOVED(args)
 	and args.auraType == "BUFF" then
 		warningLocustFaded:Show()
 		timerLocustIn:Start()
-		warningLocustSoon:Schedule(70-23)
-		timerLocustIn:Start(75-23)
+		warningLocustSoon:Schedule(42)
+		timerLocustIn:Start(47)
 	end
 end
 

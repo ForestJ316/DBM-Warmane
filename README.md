@@ -1,3 +1,7 @@
+## Edited for Reborn guild on Synergie-Sindragosa realm. Only Naxxramas & OS at the moment. Some timers still need fixing because event firing is different on this server for some fights.
+### If you have DBM from Sunwell or Whitemane then chances are the timers for upcoming content (EoE, Ulduar etc.) might be more precise than the unchanged ones from Warmane.
+
+</br>
 <div align="center">
 
 # DBM-Warmane (3.3.5a)

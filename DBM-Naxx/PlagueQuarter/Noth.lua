@@ -15,9 +15,9 @@ local warnTeleportNow	= mod:NewAnnounce("WarningTeleportNow", 3, 46573)
 local warnTeleportSoon	= mod:NewAnnounce("WarningTeleportSoon", 1, 46573)
 local warnCurse			= mod:NewSpellAnnounce(29213, 2)
 
-local timerTeleport		= mod:NewTimer(90, "TimerTeleport", 46573)
+local timerTeleport		= mod:NewTimer(110, "TimerTeleport", 46573) -- Old 90
 local timerTeleportBack	= mod:NewTimer(70, "TimerTeleportBack", 46573)
-local timerBlink = mod:NewNextTimer(25, 29208)
+local timerBlink = mod:NewNextTimer(30, 29208) -- old 25
 local warnBlink = mod:NewAnnounce("Blink Soon", 1)
 local announceBlink = mod:NewSpellAnnounce(29208, 4)
 
@@ -43,7 +43,7 @@ function mod:BackInRoom(delay)
 	delay = delay or 0
 	self:SetStage(0)
 	local timer
-	if self.vb.phase == 1 then timer = 90 - delay
+	if self.vb.phase == 1 then timer = 110 - delay -- old 90
 	elseif self.vb.phase == 2 then timer = 110 - delay
 	elseif self.vb.phase == 3 then timer = 180 - delay
 	else return end

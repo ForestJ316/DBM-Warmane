@@ -12,7 +12,8 @@ mod:EnableModel()
 mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
-	"UNIT_AURA"
+	"UNIT_AURA",
+	"SPELL_CAST_SUCCESS"
 )
 
 local warnShiftCasting		= mod:NewCastAnnounce(28089, 3)
@@ -22,9 +23,11 @@ local warnThrow				= mod:NewSpellAnnounce(28338, 2)
 local warnThrowSoon			= mod:NewSoonAnnounce(28338, 1)
 
 local enrageTimer			= mod:NewBerserkTimer(365)
-local timerNextShift		= mod:NewNextTimer(30, 28089)
+local timerNextShift		= mod:NewNextTimer(25, 28089)
 local timerShiftCast		= mod:NewCastTimer(3, 28089)
-local timerThrow			= mod:NewNextTimer(20.6, 28338)
+local timerThrow			= mod:NewNextTimer(25.6, 28338)
+
+local timerStomp			= mod:NewCDTimer(10, 55196, nil, nil, nil, 3) -- Custom stomp for Sindragosa realm
 
 local soundShiftWarn		= mod:NewSound(28089)
 local soundShift3			= mod:NewSound3(28089)
@@ -46,21 +49,32 @@ function mod:OnCombatStart(delay)
 	self:SetStage(1)
 	currentCharge = nil
 	down = 0
-	self:ScheduleMethod(20.6 - delay, "TankThrow")
+	self:ScheduleMethod(25.6 - delay, "TankThrow")
 	timerThrow:Start(-delay)
-	warnThrowSoon:Schedule(17.6 - delay)
+	warnThrowSoon:Schedule(22.6 - delay)
 end
 
 local lastShift = 0
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(28089) then
+		if self.vb.phase ~= 2 then
+			enrageTimer:Cancel()
+			enrageTimer:Start(345)
+		end
 		self:SetStage(2)
 		timerNextShift:Start()
-		soundShift3:Schedule(27)
+		soundShift3:Schedule(22)
 		timerShiftCast:Start()
 		soundShiftWarn:Play("Interface\\AddOns\\DBM-Core\\sounds\\beware.ogg")
 		warnShiftCasting:Show()
 		lastShift = GetTime()
+	end
+end
+
+-- Custom Stomp ability
+function mod:SPELL_CAST_SUCCESS(args)
+	if args:IsSpellID(55196) then
+		timerStomp:Start()
 	end
 end
 
@@ -125,8 +139,8 @@ function mod:TankThrow()
 		return
 	end
 	timerThrow:Start()
-	warnThrowSoon:Schedule(17.6)
-	self:ScheduleMethod(20.6, "TankThrow")
+	warnThrowSoon:Schedule(22.6)
+	self:ScheduleMethod(25.6, "TankThrow")
 end
 
 local function arrowOnUpdate(self, elapsed)

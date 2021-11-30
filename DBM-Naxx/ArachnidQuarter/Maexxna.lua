@@ -6,7 +6,7 @@ mod:SetCreatureID(15952)
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
-	"SPELL_AURA_APPLIED 28622",
+	"SPELL_AURA_APPLIED 28622 29484 54125",
 	"SPELL_CAST_SUCCESS 29484 54125"
 )
 
@@ -47,16 +47,26 @@ function mod:SPELL_AURA_APPLIED(args)
 			specWarnWebWrap:Show()
 			specWarnWebWrap:Play("targetchange")
 		end
-	end
-end
-
-function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(29484, 54125) then -- Web Spray
+	-- Synergie-Sindragosa workaround since Web Spray doesn't seem to fire on SPELL_CAST_SUCCESS
+	elseif args:IsSpellID(29484, 54125) then -- Web Spray
 		warnWebSprayNow:Show()
-		warnWebSpraySoon:Schedule(35.5)
-		timerWebSpray:Start()
+		warnWebSpraySoon:Schedule(25)
+		timerWebSpray:Start(30)
 		warnSpidersSoon:Schedule(25)
 		warnSpidersNow:Schedule(30)
 		timerSpider:Start()
 	end
 end
+
+--[[
+function mod:SPELL_CAST_SUCCESS(args)
+	if args:IsSpellID(29484, 54125) then -- Web Spray
+		warnWebSprayNow:Show()
+		warnWebSpraySoon:Schedule(25)
+		timerWebSpray:Start(30)
+		warnSpidersSoon:Schedule(25)
+		warnSpidersNow:Schedule(30)
+		timerSpider:Start()
+	end
+end
+]]

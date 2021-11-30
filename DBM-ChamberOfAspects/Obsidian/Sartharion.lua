@@ -29,7 +29,7 @@ local specwarnShadronPortal	= mod:NewSpecialWarning("WarningShadronPortal", fals
 mod:AddBoolOption("AnnounceFails", true, "announce")
 
 local timerShadowFissure	= mod:NewCastTimer(5, 59128, nil, nil, nil, 3) --Cast timer until Void Blast. it's what happens when shadow fissure explodes.
-local timerWall				= mod:NewCDTimer(30, 43113, nil, nil, nil, 2)
+local timerWall				= mod:NewCDTimer(20, 43113, nil, nil, nil, 2) -- Based on PTR looks to be 20s CD
 local timerTenebron			= mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
 local timerShadron			= mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
 local timerVesperon			= mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
@@ -119,20 +119,20 @@ function mod:CheckDrakes(delay)
 		end
 	end
 	if isunitdebuffed(58105) then	-- Power of Shadron
-		timerShadron:Start(74 - delay)
-		warnShadron:Schedule(69 - delay)
-		timerShadronPortal:Start(94 - delay)
-		warnShadronPortal:Schedule(89 - delay)
+		timerShadron:Start(70 - delay) -- Based on PTR, 4s-5s earlier
+		warnShadron:Schedule(65 - delay)
+		timerShadronPortal:Start(86 - delay) -- Based on PTR seems to be 8s earlier
+		warnShadronPortal:Schedule(81 - delay)
 		if self.Options.HealthFrame then
 			DBM.BossHealth:AddBoss(30451, "Shadron")
 		end
 	end
 	if isunitdebuffed(61251) then	-- Power of Vesperon
-		timerVesperon:Start(119 - delay)
-		warnVesperon:Schedule(114 - delay)
-		timerVesperonPortal:Start(139 - delay)
-		timerVesperonPortal2:Start(199 - delay)
-		warnVesperonPortal:Schedule(134 - delay)
+		timerVesperon:Start(129 - delay) -- Based on PTR 10s later
+		warnVesperon:Schedule(124 - delay)
+		timerVesperonPortal:Start(159 - delay) -- Based on PTR 20s later
+		timerVesperonPortal2:Start(199 - delay) -- Assume every 40s for now
+		warnVesperonPortal:Schedule(154 - delay) -- Adjust for 20s later
 		warnVesperonPortal:Schedule(194 - delay)
 		if self.Options.HealthFrame then
 			DBM.BossHealth:AddBoss(30449, "Vesperon")

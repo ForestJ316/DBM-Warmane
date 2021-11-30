@@ -1,15 +1,15 @@
 local mod	= DBM:NewMod("Horsemen", "DBM-Naxx", 4)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 4909 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 7007 $"):sub(12, -3))
 mod:SetCreatureID(16063, 16064, 16065, 30549)
 
-mod:RegisterCombat("combat", 16063, 16064, 16065, 30549)
+mod:RegisterCombat("combat")
 
 mod:EnableModel()
 
 mod:RegisterEvents(
-	"SPELL_CAST_SUCCEEDED",
+	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_APPLIED",
 	"UNIT_DIED"
@@ -17,7 +17,7 @@ mod:RegisterEvents(
 
 local warnMarkSoon			= mod:NewAnnounce("WarningMarkSoon", 1, 28835, false)
 local warnMarkNow			= mod:NewAnnounce("WarningMarkNow", 2, 28835)
-local holyWrathCD     		= mod:NewCDTimer(13, 57466)
+local holyWrathCD     		= mod:NewCDTimer(13, 57466, nil, nil, nil, 3)
 
 local LADY_MARK = 28833
 local ZELIEK_MARK = 28835
@@ -28,6 +28,8 @@ local NextLadyMark			= mod:NewNextTimer(12, LADY_MARK)
 local NextZeliekMark		= mod:NewNextTimer(12, ZELIEK_MARK)
 local NextBaronMark			= mod:NewNextTimer(10, BARON_MARK)
 local NextThaneMark			= mod:NewNextTimer(10, THANE_MARK)
+
+local meteorCD				= mod:NewCDTimer(14, 57467, nil, nil, nil, 2)
 
 local specWarnMarkOnPlayer	= mod:NewSpecialWarning("SpecialWarningMarkOnPlayer", nil, false, true)
 
@@ -95,6 +97,8 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(28883, 53638, 57466, 32455) then
 		holyWrathCD:Start()
+	elseif args:IsSpellID(28884, 57467) then
+		meteorCD:Start()
 	end
 end
 
