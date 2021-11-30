@@ -20,7 +20,7 @@ local warnEnrageNow			= mod:NewSpellAnnounce(28131, 4)
 local timerEmbrace			= mod:NewBuffActiveTimer(30, 28732)
 local timerEnrage			= mod:NewCDTimer(60, 28131)
 
-local timerPoisonVolley		= mod:NewCDTimer(15, 54098, nil, nil, nil, 6)
+local timerPoisonVolley		= mod:NewCDTimer(15, 54098, nil, nil, nil, 5)
 
 local embraceSpam = 0
 local enraged = false
