@@ -20,6 +20,8 @@ local warnEnrageNow			= mod:NewSpellAnnounce(28131, 4)
 local timerEmbrace			= mod:NewBuffActiveTimer(30, 28732)
 local timerEnrage			= mod:NewCDTimer(60, 28131)
 
+local timerPoisonVolley		= mod:NewCDTimer(15, 54098, nil, nil, nil, 6)
+
 local embraceSpam = 0
 local enraged = false
 
@@ -37,6 +39,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnEmbraceExpired:Cancel()
 		warnEnrageSoon:Cancel()
 		timerEnrage:Stop()
+		timerPoisonVolley:Cancel()
 		if enraged then
 			timerEnrage:Start()
 			warnEnrageSoon:Schedule(45)
@@ -45,7 +48,10 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnEmbraceActive:Show()
 		warnEmbraceExpire:Schedule(25)
 		warnEmbraceExpired:Schedule(30)
-		enraged = false
+		enraged = fals
+	elseif args:IsSpellID(28796, 54098) then -- Poison Bolt Volley
+		timerPoisonVolley:Cancel()
+		timerPoisonVolley:Start()
 	end
 end
 
