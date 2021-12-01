@@ -69,7 +69,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 		warnDrainLifeNow:Show()
 		warnDrainLifeSoon:Schedule(18.5)
 		timerDrainLife:Start()
-	elseif args:IsSpellID(55196) then -- Custom Stomp ability
+	elseif args:IsSpellID(45185) then -- Custom Stomp ability
 		timerStomp:Start()
 	end
 end
