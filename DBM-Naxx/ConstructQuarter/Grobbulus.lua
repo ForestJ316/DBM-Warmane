@@ -91,7 +91,7 @@ function mod:SPELL_AURA_REMOVED(args)
 	end
 end
 
--- SPELL_SUMMON event on this server
+-- SPELL_SUMMON event on this server instead of SPELL_CAST_SUCCESS
 function mod:SPELL_SUMMON(args)
 	-- Source name Grobbulus on clouds under him
 	-- For mutagen explosion clouds source name is player name for the SPELL_SUMMON event
