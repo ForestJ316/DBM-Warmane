@@ -73,7 +73,7 @@ end
 
 -- Custom Stomp ability
 function mod:SPELL_CAST_SUCCESS(args)
-	if args:IsSpellID(55196) then
+	if args:IsSpellID(45185) then
 		timerStomp:Start()
 	end
 end
