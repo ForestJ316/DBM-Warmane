@@ -13,7 +13,8 @@ mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"UNIT_AURA",
-	"SPELL_CAST_SUCCESS"
+	"SPELL_CAST_SUCCESS",
+	"UNIT_DIED"
 )
 
 local warnShiftCasting		= mod:NewCastAnnounce(28089, 3)
@@ -22,7 +23,7 @@ local warnChargeNotChanged	= mod:NewSpecialWarning("WarningChargeNotChanged", fa
 local warnThrow				= mod:NewSpellAnnounce(28338, 2)
 local warnThrowSoon			= mod:NewSoonAnnounce(28338, 1)
 
-local enrageTimer			= mod:NewBerserkTimer(365)
+local enrageTimer			= mod:NewBerserkTimer(360)
 local timerNextShift		= mod:NewNextTimer(25, 28089)
 local timerShiftCast		= mod:NewCastTimer(3, 28089)
 local timerThrow			= mod:NewNextTimer(25.6, 28338)
@@ -52,15 +53,15 @@ function mod:OnCombatStart(delay)
 	self:ScheduleMethod(25.6 - delay, "TankThrow")
 	timerThrow:Start(-delay)
 	warnThrowSoon:Schedule(22.6 - delay)
+	-- Random Gluth timers appearing sometimes
+	-- I'm assuming because Gluth's corpse is still in DBM range when pulling Thaddius
+	timerDecimate:Cancel()
+	warnDecimateSoon:Cancel()
 end
 
 local lastShift = 0
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(28089) then
-		if self.vb.phase ~= 2 then
-			enrageTimer:Cancel()
-			enrageTimer:Start(345)
-		end
 		self:SetStage(2)
 		timerNextShift:Start()
 		soundShift3:Schedule(22)
@@ -120,6 +121,7 @@ function mod:UNIT_AURA(elapsed)
 	end
 end
 
+-- Emote not fired on this server, UNIT_DIED on Tesla Coil is a workaround
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 	if msg:match(L.Emote) or msg:match(L.Emote2) or msg:find(L.Emote) or msg:find(L.Emote2) or msg == L.Emote or msg == L.Emote2 then
 		down = down + 1
@@ -129,6 +131,23 @@ function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg)
 			warnThrowSoon:Cancel()
 			DBM.BossHealth:Hide()
 			enrageTimer:Start()
+		end
+	end
+end
+
+-- Workaround for the above event not being fired on this server
+function mod:UNIT_DIED(args)
+	if args.destName == "Tesla Coil" then
+		down = down + 1
+		if down >= 2 then
+			self:UnscheduleMethod("TankThrow")
+			timerThrow:Cancel()
+			warnThrowSoon:Cancel()
+			DBM.BossHealth:Hide()
+			enrageTimer:Cancel()
+			enrageTimer:Start(360)
+			timerNextShift:Start(15)
+			soundShift3:Schedule(12)
 		end
 	end
 end
