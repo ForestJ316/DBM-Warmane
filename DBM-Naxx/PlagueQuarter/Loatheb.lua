@@ -32,10 +32,13 @@ mod:AddBoolOption("SporeDamageAlert", false)
 local doomCounter	= 0
 
 function mod:OnCombatStart(delay)
-	doomCounter = 0
-	timerSpore:Start(-delay)
-	warnSporeSoon:Schedule(7-delay)
-	timerDoom:Start(30 - delay, doomCounter + 1)
+	local subZone = GetSubZoneText()
+	if subZone == "The Necrotic Vault" then -- Fix for Loatheb timers appearing on other bosses
+		doomCounter = 0
+		timerSpore:Start(-delay)
+		warnSporeSoon:Schedule(7-delay)
+		timerDoom:Start(30 - delay, doomCounter + 1)
+	end
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
