@@ -70,6 +70,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
+	BuffEnable		= "Sartharion Heroic Mode enabled",
+	YellPull		= "It is my charge to watch over these eggs. I will see you burn before any harm comes to them!",
 	Wall			= "The lava surrounding %s churns!",
 	Portal			= "%s begins to open a Twilight Portal!",
 	NameTenebron	= "Tenebron",
