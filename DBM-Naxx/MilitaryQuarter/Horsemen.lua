@@ -126,7 +126,9 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 16064 then
-		NextZeliekMark:Cancel()
+		NextThaneMark:Cancel()
+		meteorCD:Cancel()
+		self:UnscheduleMethod("MeteorCast")
 	elseif cid == 30549 then
 		NextBaronMark:Cancel()
 	elseif cid == 16065 then
