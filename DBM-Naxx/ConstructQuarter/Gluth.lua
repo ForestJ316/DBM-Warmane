@@ -19,9 +19,12 @@ local enrageTimer		= mod:NewBerserkTimer(420)
 local timerDecimate		= mod:NewCDTimer(104, 54426, nil, nil, nil, 2)
 
 function mod:OnCombatStart(delay)
-	enrageTimer:Start(420 - delay)
-	timerDecimate:Start(105 - delay)
-	warnDecimateSoon:Schedule(95 - delay)
+	local subZone = GetSubZoneText()
+	if subZone ~= "The Halls of Reanimation" then -- Fix for Gluth timers showing on Thaddius pull
+		enrageTimer:Start(420 - delay)
+		timerDecimate:Start(105 - delay)
+		warnDecimateSoon:Schedule(95 - delay)
+	end
 end
 
 function mod:SPELL_DAMAGE(_, _, _, _, _, _, spellId)

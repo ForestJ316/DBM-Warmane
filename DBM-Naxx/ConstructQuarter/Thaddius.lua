@@ -53,10 +53,6 @@ function mod:OnCombatStart(delay)
 	self:ScheduleMethod(25.6 - delay, "TankThrow")
 	timerThrow:Start(-delay)
 	warnThrowSoon:Schedule(22.6 - delay)
-	-- Random Gluth timers appearing sometimes
-	-- I'm assuming because Gluth's corpse is still in DBM range when pulling Thaddius
-	timerDecimate:Cancel()
-	warnDecimateSoon:Cancel()
 end
 
 local lastShift = 0
