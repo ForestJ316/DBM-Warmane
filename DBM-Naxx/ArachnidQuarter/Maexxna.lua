@@ -23,11 +23,14 @@ local timerWebSpray		= mod:NewNextTimer(40.5, 29484, nil, nil, nil, 2)
 local timerSpider		= mod:NewTimer(30, "TimerSpider", 17332, nil, nil, 1)
 
 function mod:OnCombatStart(delay)
-	warnWebSpraySoon:Schedule(35.5 - delay)
-	timerWebSpray:Start(40.5 - delay)
-	warnSpidersSoon:Schedule(25 - delay)
-	warnSpidersNow:Schedule(30 - delay)
-	timerSpider:Start(30 - delay)
+	local subZone = GetSubZoneText()
+	if subZone == "Maexxna's Nest" then -- Fix for Maexxna timers sometimes appearing on other boss (4 Horsemen for example)
+		warnWebSpraySoon:Schedule(35.5 - delay)
+		timerWebSpray:Start(40.5 - delay)
+		warnSpidersSoon:Schedule(25 - delay)
+		warnSpidersNow:Schedule(30 - delay)
+		timerSpider:Start(30 - delay)
+	end
 end
 
 function mod:OnCombatEnd(wipe)
