@@ -11,7 +11,8 @@ mod:EnableModel()
 mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_DAMAGE",
-	"SWING_DAMAGE"
+	"SWING_DAMAGE",
+	"SPELL_SUMMON"
 )
 
 local warnSporeNow	= mod:NewSpellAnnounce(32329, 2)
@@ -28,34 +29,39 @@ local timerAura		= mod:NewBuffActiveTimer(17, 55593)
 mod:AddBoolOption("SporeDamageAlert", false)
 
 local doomCounter	= 0
-local sporeTimer	= 24
 
 function mod:OnCombatStart(delay)
 	doomCounter = 0
-	if mod:IsDifficulty("heroic25") then
-		sporeTimer = 18
-	else
-		sporeTimer = 24
-	end
-	timerSpore:Start(sporeTimer - delay)
-	warnSporeSoon:Schedule(sporeTimer - 5 - delay)
+	timerSpore:Start(-delay)
+	warnSporeSoon:Schedule(19-delay)
 	timerDoom:Start(30 - delay, doomCounter + 1)
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
+	--[[
 	if args:IsSpellID(29234) then
 		timerSpore:Start(12) -- Each spore after first every 12 seconds
 		warnSporeNow:Show()
 		warnSporeSoon:Schedule(sporeTimer - 5)
-	elseif args:IsSpellID(29204, 55052) then  -- Inevitable Doom
+	end
+	]]
+	if args:IsSpellID(29204, 55052) then  -- Inevitable Doom
 		doomCounter = doomCounter + 1
-		local timer = 30
 		warnDoomNow:Show(doomCounter)
-		timerDoom:Start(timer, doomCounter + 1)
-	elseif args:IsSpellID(55593) then
+		timerDoom:Start(30, doomCounter + 1)
+	elseif args:IsSpellID(55593) then -- Necrotic aura
 		timerAura:Start()
 		warnHealSoon:Schedule(14)
 		warnHealNow:Schedule(17)
+	end
+end
+
+-- Assuming SPELL_SUMMON for spore on this server
+function mod:SPELL_SUMMON(args)
+	if args:IsSpellID(29234) then
+		timerSpore:Start(12) -- Each spore after first every 12 seconds
+		warnSporeNow:Show()
+		warnSporeSoon:Schedule(12-5)
 	end
 end
 
