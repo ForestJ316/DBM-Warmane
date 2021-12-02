@@ -16,24 +16,27 @@ mod:RegisterEvents(
 	"UNIT_HEALTH"
 )
 
-local warnDrainLifeNow	= mod:NewSpellAnnounce(28542, 2)
-local warnDrainLifeSoon	= mod:NewSoonAnnounce(28542, 1)
-local warnAirPhaseSoon	= mod:NewAnnounce("WarningAirPhaseSoon", 3, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
-local warnAirPhaseNow	= mod:NewAnnounce("WarningAirPhaseNow", 4, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
-local warnLanded		= mod:NewAnnounce("WarningLanded", 4, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
+local warnDrainLifeNow		= mod:NewSpellAnnounce(28542, 2)
+local warnDrainLifeSoon		= mod:NewSoonAnnounce(28542, 1)
+local warnAirPhaseSoon		= mod:NewAnnounce("WarningAirPhaseSoon", 3, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
+local warnAirPhaseNow		= mod:NewAnnounce("WarningAirPhaseNow", 4, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
+local warnLanded			= mod:NewAnnounce("WarningLanded", 4, "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
 
-local warnDeepBreath	= mod:NewSpecialWarning("WarningDeepBreath")
-local specwarnlowhp		= mod:NewSpecialWarning("SpecWarnSapphLow")
-local warnFrostrain		= mod:NewSpecialWarningMove(55699)
+local warnDeepBreath		= mod:NewSpecialWarning("WarningDeepBreath")
+local specwarnlowhp			= mod:NewSpecialWarning("SpecWarnSapphLow")
+local warnFrostrain			= mod:NewSpecialWarningMove(55699)
 
 mod:AddBoolOption("WarningIceblock", true, "yell")
 
-local timerDrainLife	= mod:NewCDTimer(23.5, 28542)
-local timerAirPhase		= mod:NewTimer(53.5, "TimerAir", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
-local timerLanding		= mod:NewTimer(28.5, "TimerLanding", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
-local timerIceBlast		= mod:NewTimer(8, "TimerIceBlast", 15876)
+local timerDrainLife		= mod:NewCDTimer(24, 28542)
+local timerAirPhase			= mod:NewTimer(53.5, "TimerAir", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendUnBurrow.blp")
+local timerLanding			= mod:NewTimer(28.5, "TimerLanding", "Interface\\AddOns\\DBM-Core\\textures\\CryptFiendBurrow.blp")
+local timerIceBlast			= mod:NewTimer(8, "TimerIceBlast", 15876)
 
-local timerStomp		= mod:NewCDTimer(10, 45185, nil, nil, nil, 3) -- Custom stomp for Sindragosa realm
+local timerStomp			= mod:NewCDTimer(10, 45185, nil, "Tank|Healer", nil, 5) -- Custom stomp for Sindragosa realm
+local warnStomp				= mod:NewTargetAnnounce(45185, 3, nil, "Tank|Healer")
+local specWarnStompTaunt	= mod:NewSpecialWarningTaunt(45185, nil, nil, nil, 1, 2)
+local specWarnStompYou		= mod:NewSpecialWarningYou(45185, "Tank")
 
 local noTargetTime = 0
 local isFlying = false
@@ -67,9 +70,16 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(28542, 55665) then -- Life Drain
 		warnDrainLifeNow:Show()
-		warnDrainLifeSoon:Schedule(18.5)
+		warnDrainLifeSoon:Schedule(19)
 		timerDrainLife:Start()
 	elseif args:IsSpellID(45185) then -- Custom Stomp ability
+		warnStomp:Show(args.destName)
+		if not args:IsPlayer() then
+			specWarnStompTaunt:Show(args.destName)
+			specWarnStompTaunt:Play("tauntboss")
+		else
+			specWarnStompYou:Show()
+		end
 		timerStomp:Start()
 	end
 end
@@ -103,6 +113,7 @@ function mod:Landing()
 	warnAirPhaseSoon:Schedule(44)
 	warnLanded:Show()
 	timerAirPhase:Start()
+	timerStomp:Start()
 	if self.Options.RangeFrame then
 		DBM.RangeCheck:Hide()
 	end
@@ -115,27 +126,30 @@ end
 
 mod:RegisterOnUpdateHandler(function(self, elapsed)
 	if not self:IsInCombat() then return end
-		local foundBoss, target
-		for i = 1, GetNumRaidMembers() do
-			local uId = "raid"..i.."target"
-			if self:GetUnitCreatureId(uId) == 15989 and UnitAffectingCombat(uId) then
-				target = UnitName(uId.."target")
-				foundBoss = true
-				break
-			end
+	local foundBoss, target
+	for i = 1, GetNumRaidMembers() do
+		local uId = "raid"..i.."target"
+		if self:GetUnitCreatureId(uId) == 15989 and UnitAffectingCombat(uId) then
+			target = UnitName(uId.."target")
+			foundBoss = true
+			break
 		end
-		if foundBoss and not target then
-			noTargetTime = noTargetTime + elapsed
-		elseif foundBoss then
-			noTargetTime = 0
-		end
-		if noTargetTime > 0.5 and not isFlying then
-			noTargetTime = 0
-			isFlying = true
-			self:Schedule(53.5, resetIsFlying)
-			timerDrainLife:Cancel()
-			timerAirPhase:Cancel()
-			warnAirPhaseNow:Show()
-			timerLanding:Start()
-		end
+	end
+	if foundBoss and not target then
+		noTargetTime = noTargetTime + elapsed
+	elseif foundBoss and target then
+		noTargetTime = 0
+	end
+	if noTargetTime > 0.5 and not isFlying then
+		noTargetTime = 0
+		isFlying = true
+		self:Schedule(53.5, resetIsFlying)
+		timerStomp:Cancel()
+		local oldDrainLife = timerDrainLife:GetRemaining()
+		timerDrainLife:Cancel()
+		timerDrainLife:Start(oldDrainLife + 36)
+		timerAirPhase:Cancel()
+		warnAirPhaseNow:Show()
+		timerLanding:Start()
+	end
 end, 0.2)
