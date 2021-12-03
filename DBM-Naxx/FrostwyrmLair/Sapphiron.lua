@@ -38,6 +38,8 @@ local warnStomp				= mod:NewTargetAnnounce(45185, 3, nil, "Tank|Healer")
 local specWarnStompTaunt	= mod:NewSpecialWarningTaunt(45185, nil, nil, nil, 1, 2)
 local specWarnStompYou		= mod:NewSpecialWarningYou(45185, "Tank")
 
+local timerStomp		= mod:NewCDTimer(10, 55196, nil, nil, nil, 3) -- Custom stomp for Sindragosa realm
+
 local noTargetTime = 0
 local isFlying = false
 local warned_lowhp = false

@@ -30,7 +30,9 @@ local specwarnShadronPortal	= mod:NewSpecialWarning("WarningShadronPortal", fals
 mod:AddBoolOption("AnnounceFails", true, "announce")
 
 local timerShadowFissure	= mod:NewCastTimer(5, 59128, nil, nil, nil, 3) --Cast timer until Void Blast. it's what happens when shadow fissure explodes.
+
 local timerWall				= mod:NewCDTimer(20, 43113, nil, nil, nil, 2) -- Buffed 20s CD, unbuffed 30s CD
+
 local timerTenebron			= mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
 local timerShadron			= mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
 local timerVesperon			= mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)

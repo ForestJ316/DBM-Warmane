@@ -58,6 +58,10 @@ end
 local lastShift = 0
 function mod:SPELL_CAST_START(args)
 	if args:IsSpellID(28089) then
+		if self.vb.phase ~= 2 then
+			enrageTimer:Cancel()
+			enrageTimer:Start(345)
+		end
 		self:SetStage(2)
 		timerNextShift:Start()
 		soundShift3:Schedule(22)

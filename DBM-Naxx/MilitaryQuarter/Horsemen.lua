@@ -98,6 +98,8 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(28883, 53638, 57466, 32455) then
 		holyWrathCD:Start()
+	elseif args:IsSpellID(28884, 57467) then
+		meteorCD:Start()
 	end
 end
 
