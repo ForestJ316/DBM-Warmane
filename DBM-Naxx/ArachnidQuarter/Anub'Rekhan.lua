@@ -11,7 +11,8 @@ mod:EnableModel()
 mod:RegisterEvents(
 	"SPELL_CAST_START",
 	"SPELL_AURA_REMOVED",
-	"UNIT_DIED"
+	"UNIT_DIED",
+	"SPELL_CAST_SUCCESS"
 )
 
 local warningLocustSoon		= mod:NewSoonAnnounce(28785, 2)
@@ -23,12 +24,23 @@ local specialWarningLocust	= mod:NewSpecialWarning("SpecialLocust")
 local timerLocustIn			= mod:NewCDTimer(50, 28785)
 local timerLocustFade 		= mod:NewBuffActiveTimer(43, 28785) -- 40s instead of regular 20s for Locust Swarm
 
+local warnImpaleNow			= mod:NewSpellAnnounce(56090, 1)
+local warnImpaleSoon		= mod:NewSoonAnnounce(56090, 2)
+local timerImpale			= mod:NewCDTimer(20, 56090, nil, nil, nil, 2)
+
 mod:AddBoolOption("ArachnophobiaTimer", true, "timer")
 
 
 function mod:OnCombatStart(delay)
-	timerLocustIn:Start(115 - delay) -- old 70, 45s later on Sindragosa
-	warningLocustSoon:Schedule(110 - delay)
+	warningLocustSoon:Schedule(85 - delay)
+	timerLocustIn:Start(90 - delay) -- Seems to be random from 90-115, perhaps based on spikes
+	if mod:IsDifficulty("normal10") then
+		warnImpaleSoon:Schedule(30 - delay)
+		timerImpale:Start(35 - delay)
+	else
+		warnImpaleSoon:Schedule(10 - delay)
+		timerImpale:Start(15 - delay)
+	end
 end
 
 function mod:SPELL_CAST_START(args)
@@ -37,6 +49,20 @@ function mod:SPELL_CAST_START(args)
 		specialWarningLocust:Show()
 		timerLocustIn:Stop()
 		timerLocustFade:Start(43)
+	end
+end
+
+function mod:SPELL_CAST_SUCCESS(args)
+	if args:IsSpellID(28783, 56090) then -- Impale
+		warnImpaleNow:Show()
+		 -- No idea if this event is fired on 10-man, maybe only SPELL_CAST_START like on 4 Horsemen meteor
+		if mod:IsDifficulty("normal10") then
+			warnImpaleSoon:Schedule(30)
+			timerImpale:Start(35)
+		else
+			warnImpaleSoon:Schedule(15)
+			timerImpale:Start()
+		end
 	end
 end
 

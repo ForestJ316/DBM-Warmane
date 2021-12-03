@@ -20,14 +20,18 @@ local specWarnWebWrap	= mod:NewSpecialWarningSwitch(28622, "RangedDps", nil, nil
 local yellWebWrap		= mod:NewYellMe(28622)
 
 local timerWebSpray		= mod:NewNextTimer(40.5, 29484, nil, nil, nil, 2)
-local timerSpider		= mod:NewTimer(30, "TimerSpider", 17332, nil, nil, 1)
+local timerSpider		= mod:NewTimer(40, "TimerSpider", 17332, nil, nil, 1)
 
 function mod:OnCombatStart(delay)
-	warnWebSpraySoon:Schedule(35.5 - delay)
-	timerWebSpray:Start(40.5 - delay)
-	warnSpidersSoon:Schedule(25 - delay)
-	warnSpidersNow:Schedule(30 - delay)
-	timerSpider:Start(30 - delay)
+	local subZone = GetSubZoneText()
+	if subZone == "Maexxna's Nest" then -- Fix for Maexxna timers sometimes appearing on other boss (4 Horsemen for example)
+		warnWebSpraySoon:Schedule(35.5 - delay)
+		timerWebSpray:Start(40.5 - delay)
+		warnSpidersSoon:Schedule(25 - delay)
+		warnSpidersNow:Schedule(30 - delay)
+		timerSpider:Start(30 - delay)
+		self:ScheduleMethod(30 - delay, "Spiderlings")
+	end
 end
 
 function mod:OnCombatEnd(wipe)
@@ -36,6 +40,14 @@ function mod:OnCombatEnd(wipe)
 			DBM.Bars:CancelBar(L.ArachnophobiaTimer)
 		end
 	end
+end
+
+function mod:Spiderlings()
+	self:UnscheduleMethod("Spiderlings")
+	warnSpidersSoon:Schedule(35)
+	warnSpidersNow:Schedule(40)
+	timerSpider:Start(40)
+	self:ScheduleMethod(40, "Spiderlings")
 end
 
 function mod:SPELL_AURA_APPLIED(args)
@@ -52,9 +64,6 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnWebSprayNow:Show()
 		warnWebSpraySoon:Schedule(25)
 		timerWebSpray:Start(30)
-		warnSpidersSoon:Schedule(25)
-		warnSpidersNow:Schedule(30)
-		timerSpider:Start()
 	end
 end
 

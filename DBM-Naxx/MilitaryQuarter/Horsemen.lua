@@ -10,6 +10,7 @@ mod:EnableModel()
 
 mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS",
+	"SPELL_CAST_START",
 	"SPELL_AURA_APPLIED_DOSE",
 	"SPELL_AURA_APPLIED",
 	"UNIT_DIED"
@@ -29,7 +30,7 @@ local NextZeliekMark		= mod:NewNextTimer(12, ZELIEK_MARK)
 local NextBaronMark			= mod:NewNextTimer(10, BARON_MARK)
 local NextThaneMark			= mod:NewNextTimer(10, THANE_MARK)
 
-local meteorCD				= mod:NewCDTimer(14, 57467, nil, nil, nil, 2)
+local meteorCD				= mod:NewCDTimer(15, 57467, nil, nil, nil, 2)
 
 local specWarnMarkOnPlayer	= mod:NewSpecialWarning("SpecialWarningMarkOnPlayer", nil, false, true)
 
@@ -74,16 +75,16 @@ function mod:DoMarks(args)
 	local wasMark = false
 	if args:IsSpellID(LADY_MARK) then
 		wasMark = true
-		NextLadyMark:Start(12)
+		NextLadyMark:Start(15)
 	elseif args:IsSpellID(ZELIEK_MARK) then
 		wasMark = true
-		NextZeliekMark:Start(12)
+		NextZeliekMark:Start(15)
 	elseif args:IsSpellID(BARON_MARK) then
 		wasMark = true
-		NextBaronMark:Start(10)
+		NextBaronMark:Start(12)
 	elseif args:IsSpellID(THANE_MARK) then
 		wasMark = true
-		NextThaneMark:Start(10)
+		NextThaneMark:Start(12)
 	end
 
 	if wasMark and (GetTime() - markSpam) > 5 then
@@ -97,8 +98,20 @@ end
 function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(28883, 53638, 57466, 32455) then
 		holyWrathCD:Start()
-	elseif args:IsSpellID(28884, 57467) then
-		meteorCD:Start()
+	end
+end
+
+-- Still 15s timer on next meteor when he skips one (usually on tank swaps)
+function mod:MeteorCast()
+	self:UnscheduleMethod("MeteorCast")
+	meteorCD:Cancel()
+	meteorCD:Start()
+	self:ScheduleMethod(15, "MeteorCast")
+end
+
+function mod:SPELL_CAST_START(args)
+	if args:IsSpellID(28884, 57467) then
+		self:MeteorCast()
 	end
 end
 
@@ -113,7 +126,9 @@ end
 function mod:UNIT_DIED(args)
 	local cid = self:GetCIDFromGUID(args.destGUID)
 	if cid == 16064 then
-		NextZeliekMark:Cancel()
+		NextThaneMark:Cancel()
+		meteorCD:Cancel()
+		self:UnscheduleMethod("MeteorCast")
 	elseif cid == 30549 then
 		NextBaronMark:Cancel()
 	elseif cid == 16065 then

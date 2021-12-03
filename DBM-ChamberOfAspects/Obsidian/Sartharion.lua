@@ -5,7 +5,8 @@ mod:SetRevision(("$Revision: 4911 $"):sub(12, -3))
 mod:SetCreatureID(28860)
 mod:SetZone()
 
-mod:RegisterCombat("combat")
+--mod:RegisterCombat("combat")
+mod:RegisterCombat("yell", L.YellPull)
 
 mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS",
@@ -29,7 +30,7 @@ local specwarnShadronPortal	= mod:NewSpecialWarning("WarningShadronPortal", fals
 mod:AddBoolOption("AnnounceFails", true, "announce")
 
 local timerShadowFissure	= mod:NewCastTimer(5, 59128, nil, nil, nil, 3) --Cast timer until Void Blast. it's what happens when shadow fissure explodes.
-local timerWall				= mod:NewCDTimer(20, 43113, nil, nil, nil, 2) -- Based on PTR looks to be 20s CD
+local timerWall				= mod:NewCDTimer(20, 43113, nil, nil, nil, 2) -- Buffed 20s CD, unbuffed 30s CD
 local timerTenebron			= mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
 local timerShadron			= mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
 local timerVesperon			= mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
@@ -48,6 +49,8 @@ mod:AddBoolOption("PlaySoundOnFireWall")
 local lastvoids = {}
 local lastfire = {}
 
+local isBuffedMode = false
+
 local function isunitdebuffed(spellID)
 	local name = GetSpellInfo(spellID)
 	if not name then return false end
@@ -63,9 +66,15 @@ end
 
 function mod:OnSync(event)
 	if event == "FireWall" then
-		timerWall:Start()
-		warnFireWall:Show()
-		warnFireWall:Play("watchwave")
+		if isBuffedMode then
+			timerWall:Start()
+			warnFireWall:Show()
+			warnFireWall:Play("watchwave")
+		else
+			timerWall:Start(30)
+			warnFireWall:Show()
+			warnFireWall:Play("watchwave")
+		end
 	elseif event == "VesperonPortal" then
 		warnVesperonPortal:Show()
 		specwarnVesperonPortal:Show()
@@ -88,6 +97,9 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:CHAT_MSG_RAID_BOSS_EMOTE(msg, mob)
+	if msg == L.BuffEnable or msg:find(L.BuffEnable) then
+		isBuffedMode = true
+	end
 	if not self:IsInCombat() then return end
 	if msg == L.Wall or msg:find(L.Wall) then
 		self:SendSync("FireWall")
@@ -110,30 +122,56 @@ function mod:CheckDrakes(delay)
 		DBM.BossHealth:AddBoss(28860, "Sartharion")
 	end
 	if isunitdebuffed(61248) then	-- Power of Tenebron
-		timerTenebron:Start(26 - delay)
-		warnTenebron:Schedule(21 - delay)
-		timerTenebronWhelps:Start(60 - delay)
-		warnTenebronWhelps:Schedule(55 - delay)
+		if isBuffedMode then
+			timerTenebron:Start(32 - delay)
+			warnTenebron:Schedule(27 - delay)
+			timerTenebronWhelps:Start(80 - delay)
+			warnTenebronWhelps:Schedule(75 - delay)
+		else -- regular OS 25
+			-- Assume old timers for now
+			timerTenebron:Start(26 - delay)
+			warnTenebron:Schedule(21 - delay)
+			timerTenebronWhelps:Start(60 - delay)
+			warnTenebronWhelps:Schedule(55 - delay)
+		end
 		if self.Options.HealthFrame then
 			DBM.BossHealth:AddBoss(30452, "Tenebron")
 		end
 	end
 	if isunitdebuffed(58105) then	-- Power of Shadron
-		timerShadron:Start(70 - delay) -- Based on PTR, 4s-5s earlier
-		warnShadron:Schedule(65 - delay)
-		timerShadronPortal:Start(86 - delay) -- Based on PTR seems to be 8s earlier
-		warnShadronPortal:Schedule(81 - delay)
+		if isBuffedMode then
+			timerShadron:Start(75 - delay)
+			warnShadron:Schedule(70 - delay)
+			timerShadronPortal:Start(94 - delay)
+			warnShadronPortal:Schedule(89 - delay)
+		else -- regular OS 25
+			-- Assume old timers for now
+			timerShadron:Start(74 - delay)
+			warnShadron:Schedule(69 - delay)
+			timerShadronPortal:Start(94 - delay)
+			warnShadronPortal:Schedule(89 - delay)
+		end
 		if self.Options.HealthFrame then
 			DBM.BossHealth:AddBoss(30451, "Shadron")
 		end
 	end
 	if isunitdebuffed(61251) then	-- Power of Vesperon
-		timerVesperon:Start(129 - delay) -- Based on PTR 10s later
-		warnVesperon:Schedule(124 - delay)
-		timerVesperonPortal:Start(159 - delay) -- Based on PTR 20s later
-		timerVesperonPortal2:Start(199 - delay) -- Assume every 40s for now
-		warnVesperonPortal:Schedule(154 - delay) -- Adjust for 20s later
-		warnVesperonPortal:Schedule(194 - delay)
+		if isBuffedMode then
+			timerVesperon:Start(132 - delay)
+			warnVesperon:Schedule(127 - delay)
+			timerVesperonPortal:Start(162 - delay)
+			timerVesperonPortal2:Start(202 - delay) -- Assume 40s later
+			warnVesperonPortal:Schedule(157 - delay)
+			warnVesperonPortal:Schedule(197 - delay)
+		else -- regular OS 25
+			-- Assume old timers for now
+			timerVesperon:Start(119 - delay)
+			warnVesperon:Schedule(114 - delay)
+			timerVesperonPortal:Start(139 - delay)
+			timerVesperonPortal2:Start(199 - delay)
+			warnVesperonPortal:Schedule(134 - delay)
+			warnVesperonPortal:Schedule(194 - delay)
+		end
 		if self.Options.HealthFrame then
 			DBM.BossHealth:AddBoss(30449, "Vesperon")
 		end
@@ -141,6 +179,7 @@ function mod:CheckDrakes(delay)
 end
 
 function mod:OnCombatStart(delay)
+	isBuffedMode = false
 	self:ScheduleMethod(5, "CheckDrakes", delay)
 	timerWall:Start(-delay)
 

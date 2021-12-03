@@ -15,7 +15,7 @@ mod:RegisterEvents(
 
 mod:AddBoolOption("WarningHateful", false, "announce")
 
-local enrageTimer	= mod:NewBerserkTimer(360)
+local enrageTimer	= mod:NewBerserkTimer(240) -- Original 360
 local timerAchieve	= mod:NewAchievementTimer(180, 1857, "TimerSpeedKill")
 
 local function announceStrike(target, damage)
