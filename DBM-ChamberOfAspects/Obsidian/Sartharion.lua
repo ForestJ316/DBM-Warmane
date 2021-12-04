@@ -36,8 +36,8 @@ local timerTenebron			= mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
 local timerShadron			= mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
 local timerVesperon			= mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
 
-local timerBreath			= mod:NewCDTimer(30, 68970, nil, nil, nil, 2)
-local warnBreathSoon		= mod:NewSoonAnnounce(68970, 2)
+local timerBreath			= mod:NewCDTimer(30, 58956, nil, nil, nil, 2)
+local warnBreathSoon		= mod:NewSoonAnnounce(58956, 2)
 
 local timerTenebronWhelps   = mod:NewTimer(10, "Tenebron Whelps", 1022)
 local timerShadronPortal    = mod:NewTimer(10, "Shadron Portal", 11420)
@@ -101,7 +101,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 end
 
 function mod:SPELL_CAST_START(args)
-	if args:IsSpellID(18435, 68970) then
+	if args:IsSpellID(56908, 58956) then -- Flame breath
 		warnBreathSoon:Schedule(25)
 		timerBreath:Start()
 	end
@@ -190,7 +190,7 @@ function mod:CheckDrakes(delay)
 end
 
 function mod:OnCombatStart(delay)
-	isBuffedMode = false
+	isBuffedMode = false -- This will run before HC mode check
 	self:ScheduleMethod(5, "CheckDrakes", delay)
 	timerWall:Start(-delay)
 	warnBreathSoon:Schedule(10-delay)
