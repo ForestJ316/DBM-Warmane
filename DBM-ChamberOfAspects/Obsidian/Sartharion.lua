@@ -31,14 +31,14 @@ local specwarnShadronPortal	= mod:NewSpecialWarning("WarningShadronPortal", fals
 mod:AddBoolOption("AnnounceFails", true, "announce")
 
 local timerShadowFissure	= mod:NewCastTimer(5, 59128, nil, nil, nil, 3) --Cast timer until Void Blast. it's what happens when shadow fissure explodes.
-local timerWall				= mod:NewCDTimer(20, 43113, nil, nil, nil, 2) -- Buffed 20s CD, unbuffed 30s CD
+local timerWall				= mod:NewNextTimer(20, 43113, nil, nil, nil, 2) -- Buffed 20s CD, unbuffed 30s CD
 local timerTenebron			= mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
 local timerShadron			= mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
 local timerVesperon			= mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
 
-local timerBreath			= mod:NewCDTimer(30, 58956, nil, nil, nil, 2)
+local timerBreath			= mod:NewNextTimer(30, 58956, nil, nil, nil, 2)
 local warnBreathSoon		= mod:NewSoonAnnounce(58956, 2)
-local timerTailLash			= mod:NewCDTimer(18, 58957, nil, nil, nil, 5)
+local timerTailLash			= mod:NewNextTimer(18, 58957, nil, nil, nil, 5)
 
 local timerTenebronWhelps   = mod:NewTimer(10, "Tenebron Whelps", 1022)
 local timerShadronPortal    = mod:NewTimer(10, "Shadron Portal", 11420)
