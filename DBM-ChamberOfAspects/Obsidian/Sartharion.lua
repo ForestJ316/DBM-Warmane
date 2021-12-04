@@ -38,6 +38,7 @@ local timerVesperon			= mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
 
 local timerBreath			= mod:NewCDTimer(30, 58956, nil, nil, nil, 2)
 local warnBreathSoon		= mod:NewSoonAnnounce(58956, 2)
+local timerTailLash			= mod:NewCDTimer(18, 58957, nil, nil, nil, 5)
 
 local timerTenebronWhelps   = mod:NewTimer(10, "Tenebron Whelps", 1022)
 local timerShadronPortal    = mod:NewTimer(10, "Shadron Portal", 11420)
@@ -97,6 +98,8 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(57579, 59127) and self:IsInCombat() then
 		warnShadowFissure:Show()
 		timerShadowFissure:Start()
+	elseif args:IsSpellID(56910, 58957) then
+		timerTailLash:Start()
 	end
 end
 
@@ -195,6 +198,7 @@ function mod:OnCombatStart(delay)
 	timerWall:Start(-delay)
 	warnBreathSoon:Schedule(10-delay)
 	timerBreath:Start(15-delay)
+	timerTailLash:Start(11-delay)
 	
 	table.wipe(lastvoids)
 	table.wipe(lastfire)
