@@ -12,6 +12,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
 	"SPELL_DAMAGE",
+	"SPELL_CAST_START",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_EMOTE"
 )
@@ -34,6 +35,9 @@ local timerWall				= mod:NewCDTimer(20, 43113, nil, nil, nil, 2) -- Buffed 20s C
 local timerTenebron			= mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
 local timerShadron			= mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
 local timerVesperon			= mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
+
+local timerBreath			= mod:NewCDTimer(30, 68970, nil, nil, nil, 2)
+local warnBreathSoon		= mod:NewSoonAnnounce(68970, 2)
 
 local timerTenebronWhelps   = mod:NewTimer(10, "Tenebron Whelps", 1022)
 local timerShadronPortal    = mod:NewTimer(10, "Shadron Portal", 11420)
@@ -93,6 +97,13 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(57579, 59127) and self:IsInCombat() then
 		warnShadowFissure:Show()
 		timerShadowFissure:Start()
+	end
+end
+
+function mod:SPELL_CAST_START(args)
+	if args:IsSpellID(18435, 68970) then
+		warnBreathSoon:Schedule(25)
+		timerBreath:Start()
 	end
 end
 
@@ -182,7 +193,9 @@ function mod:OnCombatStart(delay)
 	isBuffedMode = false
 	self:ScheduleMethod(5, "CheckDrakes", delay)
 	timerWall:Start(-delay)
-
+	warnBreathSoon:Schedule(10-delay)
+	timerBreath:Start(15-delay)
+	
 	table.wipe(lastvoids)
 	table.wipe(lastfire)
 end
