@@ -12,6 +12,7 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS",
 	"SPELL_AURA_APPLIED",
 	"SPELL_DAMAGE",
+	"SPELL_CAST_START",
 	"CHAT_MSG_RAID_BOSS_EMOTE",
 	"CHAT_MSG_MONSTER_EMOTE"
 )
@@ -30,10 +31,14 @@ local specwarnShadronPortal	= mod:NewSpecialWarning("WarningShadronPortal", fals
 mod:AddBoolOption("AnnounceFails", true, "announce")
 
 local timerShadowFissure	= mod:NewCastTimer(5, 59128, nil, nil, nil, 3) --Cast timer until Void Blast. it's what happens when shadow fissure explodes.
-local timerWall				= mod:NewCDTimer(20, 43113, nil, nil, nil, 2) -- Buffed 20s CD, unbuffed 30s CD
+local timerWall				= mod:NewNextTimer(20, 43113, nil, nil, nil, 2) -- Buffed 20s CD, unbuffed 30s CD
 local timerTenebron			= mod:NewTimer(30, "TimerTenebron", 61248, nil, nil, 1)
 local timerShadron			= mod:NewTimer(80, "TimerShadron", 58105, nil, nil, 1)
 local timerVesperon			= mod:NewTimer(120, "TimerVesperon", 61251, nil, nil, 1)
+
+local timerBreath			= mod:NewNextTimer(30, 58956, nil, nil, nil, 2)
+local warnBreathSoon		= mod:NewSoonAnnounce(58956, 2)
+local timerTailLash			= mod:NewNextTimer(18, 58957, nil, nil, nil, 5)
 
 local timerTenebronWhelps   = mod:NewTimer(10, "Tenebron Whelps", 1022)
 local timerShadronPortal    = mod:NewTimer(10, "Shadron Portal", 11420)
@@ -93,6 +98,20 @@ function mod:SPELL_CAST_SUCCESS(args)
 	if args:IsSpellID(57579, 59127) and self:IsInCombat() then
 		warnShadowFissure:Show()
 		timerShadowFissure:Start()
+	elseif args:IsSpellID(56910, 58957) then
+		timerTailLash:Start()
+	end
+end
+
+function mod:SPELL_CAST_START(args)
+	if args:IsSpellID(56908, 58956) then -- Flame breath
+		if isBuffedMode then
+			warnBreathSoon:Schedule(25)
+			timerBreath:Start(30)
+		else
+			warnBreathSoon:Schedule(15)
+			timerBreath:Start(20)
+		end
 	end
 end
 
@@ -128,9 +147,8 @@ function mod:CheckDrakes(delay)
 			timerTenebronWhelps:Start(80 - delay)
 			warnTenebronWhelps:Schedule(75 - delay)
 		else -- regular OS 25
-			-- Assume old timers for now
-			timerTenebron:Start(26 - delay)
-			warnTenebron:Schedule(21 - delay)
+			timerTenebron:Start(32 - delay)
+			warnTenebron:Schedule(27 - delay)
 			timerTenebronWhelps:Start(60 - delay)
 			warnTenebronWhelps:Schedule(55 - delay)
 		end
@@ -145,9 +163,8 @@ function mod:CheckDrakes(delay)
 			timerShadronPortal:Start(94 - delay)
 			warnShadronPortal:Schedule(89 - delay)
 		else -- regular OS 25
-			-- Assume old timers for now
-			timerShadron:Start(74 - delay)
-			warnShadron:Schedule(69 - delay)
+			timerShadron:Start(82 - delay)
+			warnShadron:Schedule(77 - delay)
 			timerShadronPortal:Start(94 - delay)
 			warnShadronPortal:Schedule(89 - delay)
 		end
@@ -164,13 +181,10 @@ function mod:CheckDrakes(delay)
 			warnVesperonPortal:Schedule(157 - delay)
 			warnVesperonPortal:Schedule(197 - delay)
 		else -- regular OS 25
-			-- Assume old timers for now
-			timerVesperon:Start(119 - delay)
-			warnVesperon:Schedule(114 - delay)
-			timerVesperonPortal:Start(139 - delay)
-			timerVesperonPortal2:Start(199 - delay)
-			warnVesperonPortal:Schedule(134 - delay)
-			warnVesperonPortal:Schedule(194 - delay)
+			timerVesperon:Start(129 - delay)
+			warnVesperon:Schedule(125 - delay)
+			timerVesperonPortal:Start(162 - delay)
+			warnVesperonPortal:Schedule(157 - delay)
 		end
 		if self.Options.HealthFrame then
 			DBM.BossHealth:AddBoss(30449, "Vesperon")
@@ -179,10 +193,13 @@ function mod:CheckDrakes(delay)
 end
 
 function mod:OnCombatStart(delay)
-	isBuffedMode = false
+	isBuffedMode = false -- This will run before HC mode check
 	self:ScheduleMethod(5, "CheckDrakes", delay)
 	timerWall:Start(-delay)
-
+	warnBreathSoon:Schedule(10-delay)
+	timerBreath:Start(15-delay)
+	timerTailLash:Start(11-delay)
+	
 	table.wipe(lastvoids)
 	table.wipe(lastfire)
 end
