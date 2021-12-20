@@ -17,8 +17,6 @@ local warningDecayFleshSoon	= mod:NewSoonAnnounce(49356, 2)
 local warningCloud 			= mod:NewSpellAnnounce(49548, 3)
 local warningFleshSoon 		= mod:NewSoonAnnounce(49356, 3)
 local warningFlesh 			= mod:NewSpellAnnounce(49356, 3)
-local timerSoulstorm		= mod:NewCastTimer(6, 69049)
-local warnSoulstorm			= mod:NewSpecialWarningDodge(69049)
 local warnedDecay			= false
 
 function mod:OnCombatStart()
@@ -42,7 +40,5 @@ function mod:SPELL_AURA_APPLIED(args)
 	if args.spellId == 49356 and self:AntiSpam(1) then
 		warningFleshSoon:Show()
 		warningFlesh:Schedule(5)
-		timerSoulstorm:Schedule(5)
-		warnSoulstorm:Schedule(11)
 	end
 end
