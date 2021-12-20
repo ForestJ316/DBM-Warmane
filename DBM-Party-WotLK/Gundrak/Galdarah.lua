@@ -17,35 +17,15 @@ local timerTopot		= mod:NewCDTimer(20, 59829)
 local timerVihr			= mod:NewCDTimer(21, 59824)
 local timerCharge		= mod:NewCDTimer(21, 59827)
 local specVihr			= mod:NewSpecialWarningMove(59824)
-local specFlames		= mod:NewSpecialWarningMove(66682)
-local timerNextFlames	= mod:NewNextTimer(11, 66682)
-local soundFlames3		= mod:NewSound3(66682, nil, mod:IsRanged() or mod:IsHealer())
 local phasetimer1		= mod:NewTimer(52, "TimerPhase1", 72262)
 local phasewarn1		= mod:NewAnnounce("TimerPhase1", 4, "Interface\\Icons\\Spell_Shadow_ShadesOfDarkness")
 local phasetimer2		= mod:NewTimer(52, "TimerPhase2", 72262)
 local phasewarn2		= mod:NewAnnounce("TimerPhase2", 4, "Interface\\Icons\\Spell_Shadow_ShadesOfDarkness")
 
-function mod:Flames_G(time)	-- Flames
-	if self:IsInCombat() then
-		local timer = time or 11
-		timerNextFlames:Start(timer)
-		self:ScheduleMethod(timer, "Flames_G")
-		soundFlames3:Schedule(timer-3)
-		specFlames:Schedule(timer)
-	end
-end
-
 function mod:OnCombatStart(delay)
 	timerVihr:Start()
 	self:SetStage(1)
 	phasetimer2:Start(52)
-	self:Flames_G(7)
-end
-
-function mod:OnCombatEnd()
-	self:UnscheduleMethod("Flames_G")
-	timerNextFlames:Cancel()
-	soundFlames3:Cancel()
 end
 
 function mod:SPELL_CAST_SUCCESS(args)
