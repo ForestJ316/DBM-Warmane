@@ -323,6 +323,7 @@ L:SetMiscLocalization({
 	Rivendare	= "남작 리븐데어",
 	Blaumeux	= "여군주 블라미우스",
 	Zeliek		= "젤리에크 경"
+	--SubZoneName = "The Horsemen's Assembly"
 })
 
 -------------------

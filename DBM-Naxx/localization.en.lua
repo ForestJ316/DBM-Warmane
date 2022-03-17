@@ -315,7 +315,8 @@ L:SetMiscLocalization({
 	Korthazz	= "Thane Korth'azz",
 	Rivendare	= "Baron Rivendare",
 	Blaumeux	= "Lady Blaumeux",
-	Zeliek		= "Sir Zeliek"
+	Zeliek		= "Sir Zeliek",
+	SubZoneName = "The Horsemen's Assembly"
 })
 
 -----------------

@@ -309,6 +309,7 @@ L:SetMiscLocalization({
 	Rivendare					= "Baron Vaillefendre",
 	Blaumeux					= "Dame Blaumeux",
 	Zeliek						= "Sire Zeliek"
+	--SubZoneName = "The Horsemen's Assembly"
 })
 
 -----------------
