@@ -352,7 +352,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	EmoteBreath			= "%s takes a deep breath."
+	EmoteBreath			= "%s takes a deep breath.",
+	SubZoneName			= "Sapphiron's Lair"
 })
 
 ------------------

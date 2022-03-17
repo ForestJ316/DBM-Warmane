@@ -66,7 +66,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	ArachnophobiaTimer	= "거미의 공포"
+	ArachnophobiaTimer	= "거미의 공포",
 	--SubZoneName 		= "Maexxna's Nest"
 })
 
@@ -322,7 +322,7 @@ L:SetMiscLocalization({
 	Korthazz	= "영주 코스아즈",
 	Rivendare	= "남작 리븐데어",
 	Blaumeux	= "여군주 블라미우스",
-	Zeliek		= "젤리에크 경"
+	Zeliek		= "젤리에크 경",
 	--SubZoneName = "The Horsemen's Assembly"
 })
 
@@ -362,7 +362,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	EmoteBreath				= "숨을 깊게 들이마십니다."
+	EmoteBreath				= "숨을 깊게 들이마십니다.",
+	--SubZoneName			= "Sapphiron's Lair"
 })
 
 ------------------

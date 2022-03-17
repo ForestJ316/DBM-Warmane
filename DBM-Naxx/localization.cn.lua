@@ -70,7 +70,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	ArachnophobiaTimer		= "蜘蛛克星"
+	ArachnophobiaTimer		= "蜘蛛克星",
 	--SubZoneName 			= "Maexxna's Nest"
 })
 
@@ -319,7 +319,7 @@ L:SetMiscLocalization({
 	Korthazz			= "库尔塔兹领主",
 	Rivendare			= "瑞文戴尔男爵",
 	Blaumeux			= "女公爵布劳缪克丝",
-	Zeliek				= "瑟里耶克爵士"
+	Zeliek				= "瑟里耶克爵士",
 	--SubZoneName 		= "The Horsemen's Assembly"
 })
 
@@ -356,7 +356,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	EmoteBreath			= "%s深深地吸了一口气。"
+	EmoteBreath			= "%s深深地吸了一口气。",
+	--SubZoneName		= "Sapphiron's Lair"
 })
 
 ------------------

@@ -61,7 +61,7 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	ArachnophobiaTimer	= "Arachnophobie"
+	ArachnophobiaTimer	= "Arachnophobie",
 	--SubZoneName 		= "Maexxna's Nest"
 })
 
@@ -308,7 +308,7 @@ L:SetMiscLocalization({
 	Korthazz					= "Thane Korth'azz",
 	Rivendare					= "Baron Vaillefendre",
 	Blaumeux					= "Dame Blaumeux",
-	Zeliek						= "Sire Zeliek"
+	Zeliek						= "Sire Zeliek",
 	--SubZoneName = "The Horsemen's Assembly"
 })
 
@@ -345,7 +345,8 @@ L:SetOptionLocalization({
 })
 
 L:SetMiscLocalization({
-	EmoteBreath			    = "prend une grande inspiration"
+	EmoteBreath			    = "prend une grande inspiration",
+	--SubZoneName			= "Sapphiron's Lair"
 })
 
 ------------------
