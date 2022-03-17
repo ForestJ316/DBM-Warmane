@@ -67,6 +67,7 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	ArachnophobiaTimer	= "Arachnophobie"
+	--SubZoneName 		= "Maexxna's Nest"
 })
 
 ------------------------------
@@ -149,6 +150,10 @@ L:SetOptionLocalization({
 	SporeDamageAlert	= "Sende Flüsternachricht und verkünde Spieler in Raid die Sporen beschädigen\n(benötigt aktivierte Ankündigungen und (L)- oder (A)-Status)"
 })
 
+L:SetMiscLocalization({
+	--SubZoneName 		= "The Necrotic Vault"
+})
+
 -----------------
 --  Patchwerk  --
 -----------------
@@ -184,6 +189,10 @@ L = DBM:GetModLocalization("Gluth")
 
 L:SetGeneralLocalization({
 	name = "Gluth"
+})
+
+L:SetMiscLocalization({
+	--ThaddiusSubZoneName = "The Halls of Reanimation"
 })
 
 ----------------

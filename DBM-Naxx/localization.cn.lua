@@ -71,6 +71,7 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	ArachnophobiaTimer		= "蜘蛛克星"
+	--SubZoneName 			= "Maexxna's Nest"
 })
 
 ------------------------------
@@ -153,6 +154,10 @@ L:SetOptionLocalization({
 	SporeDamageAlert		= "在团队中提示谁杀死了孢子并发送悄悄话给该玩家\n(需要团长或助理权限)"
 })
 
+L:SetMiscLocalization({
+	--SubZoneName 		= "The Necrotic Vault"
+})
+
 -----------------
 --  Patchwerk  --
 -----------------
@@ -188,6 +193,10 @@ L = DBM:GetModLocalization("Gluth")
 
 L:SetGeneralLocalization({
 	name = "格拉斯"
+})
+
+L:SetMiscLocalization({
+	--ThaddiusSubZoneName = "The Halls of Reanimation"
 })
 
 ----------------

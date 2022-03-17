@@ -67,6 +67,7 @@ L:SetOptionLocalization({
 
 L:SetMiscLocalization({
 	ArachnophobiaTimer	= "거미의 공포"
+	--SubZoneName 		= "Maexxna's Nest"
 })
 
 ---------------
@@ -148,6 +149,10 @@ L:SetOptionLocalization({
 	SporeDamageAlert	= "포자에게 데미지를 주는 공격대원에게 귓속말 보내기 및 알리기\n(공대장 및 경보 권한이 있을 경우)"
 })
 
+L:SetMiscLocalization({
+	--SubZoneName 		= "The Necrotic Vault"
+})
+
 -----------------
 -- 피조물 지구 --
 -----------------
@@ -186,6 +191,10 @@ L = DBM:GetModLocalization("Gluth")
 
 L:SetGeneralLocalization({
 	name = "글루스"
+})
+
+L:SetMiscLocalization({
+	--ThaddiusSubZoneName = "The Halls of Reanimation"
 })
 
 ----------------
